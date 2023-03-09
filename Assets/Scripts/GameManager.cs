@@ -7,15 +7,19 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private int lives = 3;
+    private int score = 0;
 
     [SerializeField] GameObject[] players;
+    [SerializeField] GameObject[] starCases;
     [SerializeField] GameObject pop;
     [SerializeField] GameObject graphics;
     [SerializeField] Transform checkPoint;
     [SerializeField] Text livesText;
     [SerializeField] Text scoreText;
+    [SerializeField] Text finalScoreText;
     [SerializeField] GameObject pausePanel;
     [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject levelCompletePanel;
 
     public static GameManager Instance { get; private set; }
     public GameObject player;
@@ -27,6 +31,7 @@ public class GameManager : MonoBehaviour
         pop.SetActive(false);
         pausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
+        levelCompletePanel.SetActive(false);
 
         InitialPlayer();
     }
@@ -71,7 +76,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Score(int score) => scoreText.text = score.ToString();
+    public void Score()
+    {
+        score += 100;
+        scoreText.text = score.ToString();
+    }
 
     public void PauseGame()
     {
@@ -93,5 +102,33 @@ public class GameManager : MonoBehaviour
         players[nextBallIndex].SetActive(true);
         players[nextBallIndex].transform.position = players[currentBallIndex].transform.position;
         player = players[nextBallIndex];
+    }
+
+    public void LevelCompleted()
+    {
+        levelCompletePanel.SetActive(true);
+
+        finalScoreText.text = score.ToString();
+
+        // 1 Star
+        if (score <= 300 || ((score > 300 && score <= 600) && lives == 1))
+        {
+            starCases[0].SetActive(false);
+        }
+
+        // 2 Stars
+        else if ((score > 300 && score <= 600) || (score > 600 && lives == 2))
+        {
+            starCases[0].SetActive(false);
+            starCases[1].SetActive(false);
+        }
+
+        // 3 Stars
+        else
+        {
+            starCases[0].SetActive(false);
+            starCases[1].SetActive(false);
+            starCases[2].SetActive(false);
+        }
     }
 }

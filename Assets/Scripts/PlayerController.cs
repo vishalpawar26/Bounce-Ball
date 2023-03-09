@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxSpeed;
     [SerializeField] Transform checkPoint;
 
-    private int score = 0;
     private float horizontalInput;
     private bool isOnGround;
     private bool isInWater;
@@ -60,9 +59,8 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Collectable"))
         {
-            score += 100;
             Destroy(collision.gameObject);
-            GameManager.Instance.Score(score);
+            GameManager.Instance.Score();
         }
 
         if (collision.gameObject.CompareTag("Water") && gameObject.CompareTag("Beach Ball"))
@@ -77,6 +75,12 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             checkPoint.position = collision.gameObject.transform.position;
+        }
+
+        if (collision.gameObject.CompareTag("LevelComplete"))
+        {
+            gameObject.SetActive(false);
+            GameManager.Instance.LevelCompleted();
         }
     }
 
